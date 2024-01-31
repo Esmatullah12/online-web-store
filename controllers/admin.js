@@ -41,17 +41,23 @@ exports.getEditProduct = (req, res, next) => {
         res.redirect("/")
     }
     const productId = req.params.productId
-    Product.findById(productId, product => {
-        if(!product){
-            res.redirect('/')
-        }
-        res.render("admin/edit-product", {
-            pageTitle: "Admin panel",
-            path: "/admin/edit-product",
-            enableEdit: editMode,
-            product: product
+    Product.findById(productId)
+        .then( product => {
+            if(!product){
+                res.redirect('/')
+            }
+            res.render("admin/edit-product", {
+                pageTitle: "Admin panel",
+                path: "/admin/edit-product",
+                enableEdit: editMode,
+                product: product
+            })
         })
-    })
+        .catch(err => {
+            console.log(err)
+        })
+        
+    
 }
 
 exports.postEditProduct = (req, res, next) => {
