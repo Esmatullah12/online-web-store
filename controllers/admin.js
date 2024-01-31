@@ -41,7 +41,7 @@ exports.getEditProduct = (req, res, next) => {
         res.redirect("/")
     }
     const productId = req.params.productId
-    Product.findById(productId)
+    Product.findAll({where: {id: productId}})
         .then( product => {
             if(!product){
                 res.redirect('/')
@@ -50,7 +50,7 @@ exports.getEditProduct = (req, res, next) => {
                 pageTitle: "Admin panel",
                 path: "/admin/edit-product",
                 enableEdit: editMode,
-                product: product
+                product: product[0]
             })
         })
         .catch(err => {
@@ -66,13 +66,13 @@ exports.postEditProduct = (req, res, next) => {
     const updatedImageUrl = req.body.imageUrl;
     const updatedPrice = req.body.price;
     const updatedDescription = req.body.description;
-    Product.findById(productId)
+    Product.findAll({where: {id: productId}})
         .then(product => {
-            product.title = updatedTitle;
-            product.imageUrl = updatedImageUrl;
-            product.price = updatedPrice;
-            product.description = updatedDescription
-            return product.save()
+            product[0].title = updatedTitle;
+            product[0].imageUrl = updatedImageUrl;
+            product[0].price = updatedPrice;
+            product[0].description = updatedDescription
+            return product[0].save()
             
         })
         .then(result => {
